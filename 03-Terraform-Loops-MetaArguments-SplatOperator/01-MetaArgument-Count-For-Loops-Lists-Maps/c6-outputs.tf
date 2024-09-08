@@ -2,25 +2,25 @@
 # For loop with list to get Public IP of Instances
 output "instance_publicip_list" {
   description = "EC2 Instance Public IPs List"
-  value = [for instance in aws_aws_instance.myec2vm: instance.public_ip]
+  value = [for instance in aws_instance.myec2vm: instance.public_ip]
 }
 
 # For loop with list to get EC2 Instance Public DNS
 output "instance_publicdns_list" {
   description = "EC2 Instance Public DNS List"
-  value = [for instance in aws_aws_instance.myec2vm: instance.public_dns]
+  value = [for instance in aws_instance.myec2vm: instance.public_dns]
 }
 /*
 # For loop with Map to get Public IP of Instances
 output "instance_publicip_map" {
   description = "EC2 Instance Public IPs List"
-  value = {for instance in aws_aws_instance.myec2vm: instance.id => instance.public_ip}
+  value = {for instance in aws_instance.myec2vm: instance.id => instance.public_ip}
 }
 
 # For loop with Map to get EC2 Instance Public DNS
 output "instance_publicdns_map" {
   description = "EC2 Instance Public DNS List"
-  value = {for instance in aws_aws_instance.myec2vm: instance.id => instance.public_dns}
+  value = {for instance in aws_instance.myec2vm: instance.id => instance.public_dns}
 }
 */
 

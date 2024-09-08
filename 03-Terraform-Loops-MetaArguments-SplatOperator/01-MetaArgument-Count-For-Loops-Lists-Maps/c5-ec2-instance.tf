@@ -1,7 +1,10 @@
 # EC2 Instance list & Map variables. In Map, it should be key & vaule pair.  
 # Count is a meta argument which is not the orginal resource parameter or argument of AWS.
-# Count is something like additional argument present in terraform out of which count, foreach etc
-# all these things we can use to change the behavior of the resource.   
+# Count is something like additional argument present in terraform out of which count, for_each etc
+# all these things we can use to change the behavior of the resource.  
+# About Count Meta Arguments
+# https://developer.hashicorp.com/terraform/language/meta-arguments/count 
+
 resource "aws_instance" "myec2vm" {
     ami = data.aws_ami.amzlinux.id
     #instance_type = var.instance_type
