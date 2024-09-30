@@ -9,7 +9,7 @@ ingress {
     from_port   =   22
     to_port     =   22
     protocol    =   "tcp"
-    cidr_blocks  =   "aws_vpc.dev_vpc.cidr_block"
+    cidr_blocks  =   [aws_vpc.dev_vpc.cidr_block, "34.231.229.219/32"]
 }
 
 ingress {
@@ -17,7 +17,7 @@ ingress {
     from_port   =   80
     to_port     =   80
     protocol    =   "tcp"
-    cidr_blocks  =   "aws_vpc.dev_vpc.cidr_block"
+    cidr_blocks  =   ["0.0.0.0/0"]
 }
 
 egress  {

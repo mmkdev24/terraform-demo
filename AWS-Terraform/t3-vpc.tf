@@ -1,7 +1,3 @@
-provider "aws" {
-  region = "us-east-1"
-}
-
 # Create VPC
 resource "aws_vpc" "dev_vpc" {
   cidr_block = "192.168.0.0/24"
@@ -70,45 +66,58 @@ resource "aws_nat_gateway" "dev_natgw" {
 resource "aws_route_table" "dev_pub_rt" {
   vpc_id = aws_vpc.dev_vpc.id
 
-  route = {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.dev_igw.id
-    }
-    tags    = {
-        Name    =   "dev_pub_rt"
+  tags  = {
+    Name  = "DEV-PUB-RT"
   }
 }
 
+# Create Route in Route Table for internet access
+
+resource "aws_route" "public_route" {
+  route_table_id = aws_route_table.dev_pub_rt.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id = aws_internet_gateway.dev_igw.id
+}
+
 # Associate Public Subnet with Public Route Table
-resource "aws_route_table_association" "public_association" {
+resource "aws_route_table_association" "public_rt_association" {
   subnet_id = aws_subnet.dev_pub_subnet.id
   route_table_id = aws_route_table.dev_pub_rt.id
 }
 
-# Create Private Route Table for Private Subnet 1 (with NAT Gateway)
+# Create Private Route Table for NAT Gateway 
 resource "aws_route_table" "dev_prv_rt_1" {
   vpc_id = aws_vpc.dev_vpc.id
 
-  route = {
-    cidr_block = "0.0.0.0/0"
-    nat_gateway_id  =   aws_nat_gateway.dev_natgw.id
-  }
-
   tags = {
-    Name    =   "dev_prv_rt_1"
+    Name  = "DEV-PVT-RT-1"
   }
 }
+
+# Create route in private route for table and associate NAT Gateway 
+resource "aws_route" "private_route1" {
+  route_table_id = aws_route_table.dev_prv_rt_1.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id = aws_nat_gateway.dev_natgw.id
+}  
+
+# Associate Private Subnet 1 with Private Route Table 1
+resource "aws_route_table_association" "private_association_1" {
+  subnet_id = aws_subnet.dev_prv_subnet_1.id
+  route_table_id = aws_route_table.dev_prv_rt_1.id
+
+}
+    
 
 # Create Private Route Table for Private Subnet 2
 resource "aws_route_table" "dev_prv_rt_2" {
   vpc_id = aws_vpc.dev_vpc.id
+
+  tags = {
+    Name  = "DEV-PVT-RT-2"
+  }
 }
 
-# Associate Private Subnet 1 with Private Route Table 1
-resource "aws_route_table_association" "private_association_1" {
-    subnet_id = aws_subnet.dev_prv_subnet_1.id
-    route_table_id = aws_route_table.dev_prv_rt_1.id
-}
 
 # Associate Private Subnet 2 with Private Route Table 2
 resource "aws_route_table_association" "private_association_2" {
